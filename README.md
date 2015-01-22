@@ -19,7 +19,7 @@ INSTALLED_APPS = (
 ## Usage
 To create a responsive content type, simpy import the ResponsiveContentType class and extend it.
 Next, in your templates folder, create a folder called content, containing the template for this content type.
-This package will handle the rest.
+Finally, instead of the usual `{% feincms_render_region feincms_page “main” request %}` template tag, use the new `{% render_responsive_region feincms_page “main” request %}`. This package will handle the rest.
 
 Example:
 ``` python
