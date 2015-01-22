@@ -1,33 +1,39 @@
 'use strict';
 
 $(function() {
-    setCols();
     $('.panel').addClass('row');
-    $('.panel').on('change', '.cols select', function() {
-        setCols();
+    // Adjust the contenttypes that are set already
+    setCols('small');
+    setCols('medium');
+    setCols('large');
+
+    // Add change listeners for the contenttypes
+    $('.panel').on('change', '.small select', function() {
+        setCols('small');
     });
-    $('.panel').on('change', '.type select', function() {
-        setCols();
+    $('.panel').on('change', '.medium select', function() {
+        setCols('medium');
+    });
+    $('.panel').on('change', '.large select', function() {
+        setCols('large');
     });
 });
 
-function setCols() {
-    $('.cols').each(function(){
-        var column = this;
-        var cols = $(this).find('select').val();
-        var type = $(this).parent().find('.type').find('select').val();
+function setCols(type) {
+    $('.' + type + ' select').each(function() {
+        var select = this;
+        var cols = $(this).val();
         if (cols > 0) {
             var checkExist = setInterval(function() {
-                var fieldset = $(column).parents('fieldset').parents('fieldset');
+                var fieldset = $(select).parents('fieldset').parents('fieldset');
                 if (fieldset.length > 0) {
-                    var classes = fieldset.attr("class").split(" ").filter(function(item) {
-                        return item.lastIndexOf("medium-", 0) !== 0
-                            && item.lastIndexOf("small-", 0) !== 0
-                            && item.lastIndexOf("large-", 0) !== 0
-                            && item.lastIndexOf("columns", 0) !== 0;
-                    });
+                    var classes = fieldset.attr("class").split(" ").filter(
+                        function(item) {
+                            return item.lastIndexOf(type + "-", 0) !== 0;
+                        }
+                    );
                     fieldset.attr("class", classes.join(" "));
-                    fieldset.addClass(type+'-'+cols);
+                    fieldset.addClass(type + '-' + cols);
                     fieldset.addClass('columns');
                     clearInterval(checkExist);
                 }

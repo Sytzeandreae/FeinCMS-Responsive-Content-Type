@@ -8,6 +8,7 @@ register = template.Library()
 
 
 def _responsive_render_content(content, **kwargs):
+    """Render the content in a responsive wrapper."""
     r = _render_content(content, **kwargs)
     return render_to_string('responsive/wrapper.html', {
         'r': r,
@@ -19,9 +20,19 @@ def _responsive_render_content(content, **kwargs):
 
 @register.simple_tag(takes_context=True)
 def render_responsive_region(context, feincms_object, region, request=None):
-    i = [i.large if i.large else i.medium if i.medium else i.small for i in getattr(feincms_object.content, region)]
+    """Calculate the amount of items we can fit on one row and render
+    the region accordingly.
+    """
+    i = [
+        i.large if i.large
+        else i.medium if i.medium
+        else i.small
+        for i in getattr(feincms_object.content, region)
+    ]
     n = []
     u = 1
+
+    # Calculate the amount of items we can fit on 12 columns
     while len(i) > 0:
         if sum(i[:u]) > 12:
             n.append(i[:u-1]) if len(i[:u]) > 1 else i[:u]
@@ -38,7 +49,11 @@ def render_responsive_region(context, feincms_object, region, request=None):
     for container in n:
         r = ''
         for l in container:
-            r += _responsive_render_content(content_items[occur], request=request, context=context)
+            r += _responsive_render_content(
+                content_items[occur],
+                request=request,
+                context=context
+            )
             occur += 1
         content.append(r)
 

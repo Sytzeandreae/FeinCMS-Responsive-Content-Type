@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.contrib import admin
 
 from feincms.module.page.models import Page
 from feincms.module.page.modeladmins import PageAdmin
-from django.conf import settings
 
 
 class ResponsivePageAdmin(PageAdmin):
@@ -13,7 +13,9 @@ class ResponsivePageAdmin(PageAdmin):
         ]
         static_url = getattr(settings, 'STATIC_URL', '/static')
         css = {
-            'all': (static_url + 'responsive_content_type/css/foundation.min.css',)
+            'all': (
+                static_url + 'responsive_content_type/css/foundation.css',
+            )
         }
 
 # Clear all page extensions
@@ -30,7 +32,6 @@ if 'elephantblog' in settings.INSTALLED_APPS:
     from elephantblog.models import Entry
     from elephantblog.admin import EntryAdmin
 
-
     class ResponsiveEntryAdmin(EntryAdmin):
         class Media:
             js = [
@@ -39,9 +40,11 @@ if 'elephantblog' in settings.INSTALLED_APPS:
             ]
             static_url = getattr(settings, 'STATIC_URL', '/static')
             css = {
-                'all': (static_url + 'responsive_content_type/css/foundation.min.css',)
+                'all': (
+                    static_url +
+                    'responsive_content_type/css/foundation.min.css',
+                )
             }
-
 
     Entry._extensions = []
     admin.site.unregister(Entry)
